@@ -8,20 +8,20 @@ require_relative 'subreddits.rb'
 
 class Bot
   def initialize(user, passwd)
-    abort "Please set both your username and password as environment variables ('user' and 'passwd'.)" if user.nil? or passwd.nil?
+    abort "Please set both your username and password as environment variables ('bfr_user' and 'bfr_passwd'.)" if user.nil? or passwd.nil?
     @user, @passwd = user, passwd
     
     @subreddits = {
       "bigfriendlyrobot" => BigFriendlyRobot.new
     }
     
-    @db = SQLite3::Database.new('user_states.db')
-    @logger = Logger.new('css_bot.log')
+    @db = SQLite3::Database.new("#{path}/user_states.db")
+    @logger = Logger.new("#{path}/css_bot.log")
   end
   
   def login
     @logger.info "Logging in with username: #{@user} and password: #{@passwd}"
-    data = request("curl --silent -d api_type=json -d user=#{@user} -d passwd=#{@passwd} -c cookies.txt http://www.reddit.com/api/login")
+    data = request("curl --silent -d api_type=json -d user=#{@user} -d passwd=#{@passwd} -c #{Dir.pwd}/cookies.txt http://www.reddit.com/api/login")
     # TODO: replace with cleaner code
     @modhash = data.split('"modhash": "')[1].split('", "cookie":').first
   end
@@ -36,7 +36,7 @@ class Bot
     
     c = Curl::Easy.new("http://www.reddit.com/api/subreddit_stylesheet")
     c.enable_cookies = true
-    c.cookiefile = 'cookies.txt'
+    c.cookiefile = "#{path}/cookies.txt"
     
     c.http_post(Curl::PostField.content('id', '#subreddit_stylesheet'),
                   Curl::PostField.content('op', 'save'),
@@ -48,7 +48,7 @@ class Bot
   
   def check_messages
     raise "Not logged in!" unless @modhash
-    json = request("curl --silent -b cookies.txt http://www.reddit.com/message/unread/.json")
+    json = request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/unread/.json")
     j = JSON.parse(json)
     messages = j['data']['children'].inject([]) do |result, message|
       message = message['data']
@@ -56,7 +56,7 @@ class Bot
       hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'] }
       result << hash
     end
-    request("curl --silent -b cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
+    request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
     @messages = messages
   end
   
@@ -99,11 +99,15 @@ class Bot
       @logger.info "Creating CSS for #{name}"
       rows = @db.execute("select * from user_states where subreddit = :subreddit", :subreddit => name)
       user_css = reddit.build_css(rows)
-      css = File.open(reddit.css).read + "\n" + user_css
+      css = File.open(path + '/' + reddit.css).read + "\n" + user_css
       upload(name, compress(css))
     end
     
     @db.results_as_hash = false
+  end
+  
+  def path
+    File.expand_path(File.dirname(__FILE__))
   end
   
   def request(cmd)

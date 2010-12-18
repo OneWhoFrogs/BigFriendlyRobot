@@ -1,3 +1,5 @@
+require_relative 'bot.rb'
+
 bot = Bot.new(ENV['bfr_user'], ENV['bfr_passwd'])
 puts "Logging in"
 bot.login
