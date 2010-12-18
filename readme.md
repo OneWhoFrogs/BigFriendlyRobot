@@ -14,7 +14,8 @@ The bot would then append "is your friend" to your username the next time it is 
 * Stores user values in SQLite 3 database.
 * Flexible system for validation of user input and CSS output
 * Allows mods to change the base CSS
-
+* Notifies users of incorrectly formatted messages to the bot
+* Could, with some modification, solve the problem of the CSS limit by deleting user tags that are X weeks old.
 
 
 Please contact me if you would like this bot to manage your subreddit's CSS tags.
