@@ -1,5 +1,5 @@
 class Subreddit
-  attr_accessor :name, :regex, :css, :moderators
+  attr_accessor :name, :regex, :css, :moderators, :format
   Banned_words = ['cheesecake', 'karaoke', 'couch']
   
   def initialize
@@ -25,6 +25,7 @@ class BigFriendlyRobot < Subreddit
   def initialize
     @name = "BigFriendlyRobot"
     @css = "css/bigfriendlyrobot.css"
+    @format = "an alphanumeric string (spaces allowed)"
     @moderators = ['ExtremePopcorn', 'BigFriendlyRobot']
     @regex = /^[a-zA-Z0-9 ]+$/
   end

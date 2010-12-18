@@ -1,6 +1,5 @@
 require 'json'
 require 'curb'
-require 'nokogiri'
 require 'sqlite3'
 require 'ap'
 require 'logger'
@@ -26,7 +25,21 @@ class Bot
     @modhash = data.split('"modhash": "')[1].split('", "cookie":').first
   end
   
-  def send_message(to, subject, contents)    
+  def reply_to_message(id, text)
+    raise "Not logged in!" unless @modhash
+    
+    @logger.info "Replying to message #{id}."
+    
+    c = Curl::Easy.new("http://www.reddit.com/api/comment")
+    c.enable_cookies = true
+    c.cookiefile = "#{path}/cookies.txt"
+    
+    c.http_post(Curl::PostField.content('id', "comment_reply_#{id}"),
+                  Curl::PostField.content('text', text),
+                  Curl::PostField.content('thing_id', id),
+                  Curl::PostField.content('renderstyle', 'html'),
+                  Curl::PostField.content('uh', @modhash))
+    sleep 2
   end
   
   def upload(subreddit, css)
@@ -44,6 +57,7 @@ class Bot
                   Curl::PostField.content('renderstyle', 'html'),
                   Curl::PostField.file('stylesheet_contents', css),
                   Curl::PostField.content('uh', @modhash))
+    sleep 2
   end
   
   def check_messages
@@ -53,7 +67,7 @@ class Bot
     messages = j['data']['children'].inject([]) do |result, message|
       message = message['data']
       hash = Hash.new
-      hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'] }
+      hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'], reply_name: message['name'] }
       result << hash
     end
     request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
@@ -69,6 +83,16 @@ class Bot
     end
     messages = @messages.delete_if do |message|
       subreddit = message[:subreddit]
+      
+      # unless it's a reply to one of the bot's messages
+      unless subreddit.index("re: ") == 0
+        if @subreddits[subreddit].nil?
+          reply_to_message message[:reply_name], "The subreddit you specified isn't managed by this bot."
+        elsif not @subreddits[subreddit].valid?(message[:change])
+          reply_to_message message[:reply_name], "Your message must be of the format:\n\n#{@subreddits[subreddit].format}"
+        end
+      end
+      
       @subreddits[subreddit].nil? or not @subreddits[subreddit].valid?(message[:change])
     end
     messages.each do |message|
@@ -105,6 +129,8 @@ class Bot
     
     @db.results_as_hash = false
   end
+  
+  private
   
   def path
     File.expand_path(File.dirname(__FILE__))
