@@ -14,3 +14,7 @@ The bot would then append "is your friend" to your username the next time it is 
 * Stores user values in SQLite 3 database.
 * Flexible system for validation of user input and CSS output
 * Allows mods to change the base CSS
+
+
+
+Please contact me if you would like this bot to manage your subreddit's CSS tags.
