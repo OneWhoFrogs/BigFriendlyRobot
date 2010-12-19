@@ -104,7 +104,7 @@ class Bot
         @db.execute("insert into user_states (user, subreddit, state, id) values (:user, :subreddit, :change, :id)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id)
       else
         @logger.info "Updating record for #{message.to_s}"
-        @db.execute("update user_states set state = :change", :change => message[:change])
+        @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit])
       end
     end
   end
