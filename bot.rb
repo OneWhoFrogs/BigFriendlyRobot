@@ -70,7 +70,7 @@ class Bot
       hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'], reply_name: message['name'] }
       result << hash
     end
-    request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
+    #request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
     @messages = messages
   end
   
@@ -95,16 +95,36 @@ class Bot
       
       @subreddits[subreddit].nil? or not @subreddits[subreddit].valid?(message[:change])
     end
+    
     messages.each do |message|
-      # sqlite gets upset when I pass unnecessary hash values, so each one has to be explicitly defined here
-      if @db.execute("select * from user_states where user = :user and subreddit = :subreddit", :user => message[:user], :subreddit => message[:subreddit]).empty?
-        json = request("curl --silent -b cookies.txt http://www.reddit.com/user/#{message[:user]}/about.json")
-        id = JSON.parse(json)['data']['id']
-        @logger.info "Adding new record for #{message.to_s}"
-        @db.execute("insert into user_states (user, subreddit, state, id) values (:user, :subreddit, :change, :id)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id)
+      # sqlite gets upset when I pass unnecessary hash values, so each one has to be explicitly defined
+      # this if statement is run through the first time someone messages the bot
+      if @db.execute("select * from swaps where (user1 = :user1 and user2 = :user2) or (user1 = :user2 and user2 = :user1)", :user1 => message[:user], :user2 => message[:change]).empty?
+        @logger.info "Adding new record in swaps for #{message.to_s}"
+        @db.execute("insert into swaps (user1, user2, approved) values (:user1, :user2, :approved)", :user1 => message[:user], :user2 => message[:change], :approved => 0)
       else
-        @logger.info "Updating record for #{message.to_s}"
-        @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit])
+        # this is run when someone replies, confirming the swap
+        
+        unless @db.execute("select * from swaps where (user1 = :user1 and user2 = :user2)", :user1 => message[:change], :user2 => message[:user]).empty?
+          @db.execute("delete from swaps where user1 = :user1 and user2 = :user2", :user1 => message[:change], :user2 => message[:user])
+          puts "Okay"
+          
+          [message[:user], message[:change]].each do |user| # update data for both users
+            rows = @db.execute("select * from user_states where user = :user and subreddit = :subreddit", :user => user, :subreddit => "bigfriendlyrobot").first
+            if rows.empty?
+              json = request("curl --silent -b cookies.txt http://www.reddit.com/user/#{user}/about.json")
+              id = JSON.parse(json)['data']['id']
+              @logger.info "Adding new record for #{message.to_s}"
+              @db.execute("insert into user_states (user, subreddit, state, id) values (:user, :subreddit, :change, :id)", :user => user, :subreddit => "bigfriendlyrobot", :change => "1", :id => id)
+            else
+              @logger.info "Updating record for #{message.to_s}"
+              
+              successful_trades = (rows[3].to_i + 1).to_s
+              
+              @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit", :change => successful_trades, :user => user, :subreddit => "bigfriendlyrobot")
+            end
+          end
+        end
       end
     end
   end
@@ -123,7 +143,9 @@ class Bot
       @logger.info "Creating CSS for #{name}"
       rows = @db.execute("select * from user_states where subreddit = :subreddit", :subreddit => name)
       user_css = reddit.build_css(rows)
+      ap user_css
       css = File.open(path + '/' + reddit.css).read + "\n" + user_css
+      puts compress(css)
       upload(name, compress(css))
     end
     
