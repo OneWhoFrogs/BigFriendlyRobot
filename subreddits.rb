@@ -26,7 +26,6 @@ class BigFriendlyRobot < Subreddit
     @name = "BigFriendlyRobot"
     @css = "css/bigfriendlyrobot.css"
     @format = "an alphanumeric string (spaces allowed)"
-    @moderators = ['ExtremePopcorn', 'BigFriendlyRobot']
     @regex = /^[a-zA-Z0-9 ]+$/
   end
   

@@ -1,6 +1,7 @@
 require 'json'
 require 'curb'
 require 'sqlite3'
+require 'nokogiri'
 require 'ap'
 require 'logger'
 require_relative 'subreddits.rb'
@@ -70,22 +71,36 @@ class Bot
       hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'], reply_name: message['name'] }
       result << hash
     end
-    request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
+    #request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
     @messages = messages
   end
   
   def update_db
     @messages.each do |message|
       subject = message[:subreddit].split(':')
-      if subject.last == "css" and @subreddits[subject.first] and subject.length == 2 and @subreddits[subject.first].moderators.include?(message[:user])
-        File.open(@subreddits[subject.first].css, "w") {|f| f.write message[:change]}
+      # update local CSS if a mod messages the bot
+      subreddit = @subreddits[subject.first]
+      if subject.last == "css" and not subreddit.nil? and subject.length == 2
+        
+        moderator_html = request("curl --silent http://www.reddit.com/r/#{subreddit.name}/about/moderators")
+        n = Nokogiri::HTML(moderator_html)
+        moderators = n.xpath("//div[@id='moderator-table']/table/tr/td/span/a").collect { |mod| mod.text }
+        
+        if moderators.include?(message[:user])
+          if message[:change].match(/^http:\/\/dpaste.com\/\d+\/plain\/?$/)
+            @logger.log("Downloading new CSS for #{subreddit.name} from #{message[:change]}")
+            downloaded_css = `curl --silent #{message[:change]}`
+            File.open(subreddit.css, "w") { |f| f.write downloaded_css }
+          end
+        end
       end
     end
+    
     messages = @messages.delete_if do |message|
       subreddit = message[:subreddit]
       
       # unless it's a reply to one of the bot's messages
-      unless subreddit.index("re: ") == 0
+      if not message[:subreddit].split(':').last == "css" and not subreddit.index("re: ") == 0
         if @subreddits[subreddit].nil?
           reply_to_message message[:reply_name], "The subreddit you specified isn't managed by this bot."
         elsif not @subreddits[subreddit].valid?(message[:change])
@@ -93,7 +108,7 @@ class Bot
         end
       end
       
-      @subreddits[subreddit].nil? or not @subreddits[subreddit].valid?(message[:change])
+      @subreddits[subreddit].nil? or message[:subreddit].split(':').last == "css" or not @subreddits[subreddit].valid?(message[:change])
     end
     messages.each do |message|
       # sqlite gets upset when I pass unnecessary hash values, so each one has to be explicitly defined here
