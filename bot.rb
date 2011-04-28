@@ -71,7 +71,7 @@ class Bot
       hash = { subreddit: message['subject'].downcase, user: message['author'], change: message['body'], reply_name: message['name'] }
       result << hash
     end
-    #request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
+    request("curl --silent -b #{path}/cookies.txt http://www.reddit.com/message/inbox/") # mark messages as read
     @messages = messages
   end
   
@@ -88,10 +88,14 @@ class Bot
         
         if moderators.include?(message[:user])
           if message[:change].match(/^http:\/\/dpaste.com\/\d+\/plain\/?$/)
-            @logger.log("Downloading new CSS for #{subreddit.name} from #{message[:change]}")
+            @logger.info("Downloading new CSS for #{subreddit.name} from #{message[:change]}")
             downloaded_css = `curl --silent #{message[:change]}`
             File.open(subreddit.css, "w") { |f| f.write downloaded_css }
+          else
+            reply_to_message message[:reply_name], "To change the CSS, please send the URL for a raw file at [dpaste](http://dpaste.com)."
           end
+        else
+          reply_to_message message[:reply_name], "You aren't a moderator in this subreddit. Only mods can edit the CSS."
         end
       end
     end
