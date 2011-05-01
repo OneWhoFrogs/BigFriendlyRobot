@@ -1,6 +1,6 @@
 class Subreddit
   attr_accessor :name, :regex, :css, :moderators, :format
-  Banned_words = ['cheesecake', 'karaoke', 'couch']
+  Banned_words = []
   
   def initialize
   end
@@ -32,6 +32,21 @@ class BigFriendlyRobot < Subreddit
   def build_css(rows)
     css = rows.inject("") do |memo, row|
       memo += ".id-t2_#{row["id"]}:after {content: ' #{row['state']}' !important}\n"
+    end
+  end
+end
+
+class StLouis < Subreddit
+  def initialize
+    @name = "StLouis"
+    @css = "css/stlouis.css"
+    @format = "An alphabetical string. Spaces, commas, periods, and apostrophes are allowed."
+    @regex = /^[a-zA-Z .,']+$/
+  end
+  
+  def build_css(rows)
+    css = rows.inject("") do |memo, row|
+      memo += ".id-t2_#{row["id"]}:after {color: gray; font-size: 0.75em; content: ' [#{row['state']}]' !important}\n"
     end
   end
 end
