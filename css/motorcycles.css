@@ -1,0 +1,168 @@
+/****CHANGE INDEX FOR STYLESHEET****/
+/*
+1. "Subscribers" to "Riders"
+2. "Submit a link" image
+3. Horizontal comment-sort menu
+4. Voting arrows from "upvotes" to "upshifts" and "downvotes" to "downshifts"
+5. "Moderators" to "Road Captains" for moderator box
+6. No link image thumbnail to custom image
+7. Downvote tooltip (removed because of complaints, but i still think it's a good idea)
+8. Alternate link highlighting (removed)
+9. User tags
+
+p.s. sorry if this hurts to look at, i'm just learning css
+*/
+/****************************************************************************************/
+
+/****1. Change subscribers to Riders*****/
+div.titlebox span.word {
+
+display: none;
+} div.titlebox span.number:after {
+
+content: " Riders";
+}
+/****************************************************************************************/
+
+/****2. Submit a link image****/
+.sidebox.submit .spacer {
+    background-image: url(%%logothumb%%);
+    background-position: 8px 0px;
+    }
+/****************************************************************************************/
+
+/****3. Horizontal Comment-Sort Menu****/
+.commentarea .menuarea {
+    padding: 2px
+    }
+.commentarea .menuarea:before {
+    content: "Sort by:";
+    padding-right: 10px
+    }
+.commentarea .menuarea .dropdown-title {
+    display: none
+    }
+.dropdown.lightdrop .selected {
+    background-color: #FFFFFF;
+    background-image: none;
+    border: 1px solid #000000 !important;
+    color: #666666;
+    padding: 0 5px;
+    text-decoration: none;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px
+    }
+.drop-choices {
+    background-color: white;
+    border: none !important;
+    margin-right: 100px
+    }
+.drop-choices.lightdrop {
+    display: inline;
+    position: static;
+    visibility: visible
+    }
+.drop-choices.lightdrop a.choice {
+    display: inline;
+    padding: 0 5px;
+    color: #555555;
+    margin: 6px;
+    background-color: #F2F2F2;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px
+    }
+/****************************************************************************************/
+
+/***4. Voting arrow titles***/
+.linkinfo .upvotes .word {
+    display: none
+    }
+.linkinfo .upvotes:after {
+    content: "upshifts";
+    font-size: 10px
+    }
+.linkinfo .downvotes .word {
+    display: none
+    }
+.linkinfo .downvotes:after {
+    content: "downshifts";
+    font-size: 10px
+    }
+/*.linkinfo .score .number:after {
+    content: " revs";
+    font-size: 15px
+    }
+.linkinfo .score .word {
+    display: none
+    }*/
+/****************************************************************************************/
+
+/***5. Changing 'MODERATORS in sidebar***/
+.sidecontentbox h1:not(:first-child) {
+    font-size: 0 !important
+    }
+.sidecontentbox h1:not(:first-child):after {
+    font-size: 10pt !important;
+    content: "Road Captains"
+    }
+/****************************************************************************************/
+
+/****6. no link image thumbnail***/
+.thumbnail img[src^="/static/"] {
+    background-image: url(%%thumbnail%%) !important;
+    background-repeat: no-repeat !important;
+    height: 1px !important;
+    width: 1px !important;
+    padding: 51px 0 0 63px !important
+    }
+/****************************************************************************************/
+
+/****7. Downvote tooltip****/
+/*
+.arrow.down:hover:before {
+    position: absolute;
+    display: block;
+    z-index: 1000;
+    width: 200px;
+    padding: 2px;
+    border: 1px solid #333;
+    background-color: #FFFFE0;
+    content: "Please don't downvote opinions just because you disagree.";
+    text-align: center;
+    font-size: 9px;
+    font-weight: normal;
+    margin-left: 2px;
+    margin-top: 2px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px
+    }
+*/
+/****************************************************************************************/
+
+/****8. Alternating link highlighting*****/
+/*
+.link.odd {
+    background: #f8f8f8
+    }
+.usertext-body .md {
+    border-color: #000
+    }
+.link .usertext .md {
+    border-color: #000
+    }
+.link.odd .entry {
+    border: 1px dotted #dddddd
+    }
+*/
+/****************************************************************************************/
+
+/*******9. USER TAGS********/
+
+/*MODS*/
+
+/*USERS*/
+
+
+
+ 
+/****************************************************************************************/
