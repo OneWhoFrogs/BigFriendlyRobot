@@ -56,7 +56,7 @@ class Motorcycles < Subreddit
     @name = "Motorcycles"
     @css = "css/motorcycles.css"
     @format = "Letters, numbers, and spaces only. Text must be less than 20 characters long."
-    @regex = /^[a-zA-Z ]{0,20}$/
+    @regex = /^[a-zA-Z0-9-/ ]{0,40}$/
   end
   
   def build_css(rows)
