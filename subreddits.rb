@@ -41,12 +41,27 @@ class StLouis < Subreddit
     @name = "StLouis"
     @css = "css/stlouis.css"
     @format = "An alphabetical string. Spaces, commas, periods, and apostrophes are allowed."
-    @regex = /^[a-zA-Z .,']+$/
+    @regex = /^[a-zA-Z .,']{0,20}$/
   end
   
   def build_css(rows)
     css = rows.inject("") do |memo, row|
       memo += ".id-t2_#{row["id"]}:after {color: gray; font-size: 0.75em; content: ' [#{row['state']}]' !important}\n"
+    end
+  end
+end
+
+class Motorcycles < Subreddit
+  def initialize
+    @name = "Motorcycles"
+    @css = "css/motorcycles.css"
+    @format = "Letters, numbers, and spaces only. Text must be less than 20 characters long."
+    @regex = /^[a-zA-Z ]{0,20}$/
+  end
+  
+  def build_css(rows)
+    css = rows.inject("") do |memo, row|
+      memo += ".id-t2_#{row["id"]}:after {color: gray; font-size: 0.75em; content: ' #{row['state']}' !important}\n"
     end
   end
 end

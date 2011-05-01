@@ -13,7 +13,8 @@ class Bot
     
     @subreddits = {
       "bigfriendlyrobot" => BigFriendlyRobot.new,
-      "stlouis" => StLouis.new
+      "stlouis" => StLouis.new,
+      "motorcycles" => Motorcycles.new
     }
     
     @db = SQLite3::Database.new("#{path}/user_states.db")
