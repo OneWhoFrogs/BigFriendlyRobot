@@ -55,7 +55,7 @@ class Motorcycles < Subreddit
   def initialize
     @name = "Motorcycles"
     @css = "css/motorcycles.css"
-    @format = "Letters, numbers, and spaces only. Text must be less than 20 characters long."
+    @format = "Letters, numbers, and spaces only. Text must be less than 40 characters long."
     @regex = /^[a-zA-Z0-9-/ ]{0,40}$/
   end
   
