@@ -1,0 +1,59 @@
+/* Meetup Highlighting */
+.title[href*="meetup"] {
+    color: green !important
+    }
+.title[href*="meet up"] {
+    color: green !important
+    }
+.title[href*="Meetup"] {
+    color: green !important
+    }
+.title[href*="Meet-up"] {
+    color: green !important
+    }
+.title[href*="Meet Up"] {
+    color: green !important
+    }
+.title[href*="Meet-Up"] {
+    color: green !important
+    }
+.title[href*="Official"] {
+    color: red !important
+    }
+/*What is this for, besides turning "Official investigation of Paul McKee Derailed" bright red?*/
+/* Background */
+#header {
+    background: url(http://thumbs.reddit.com/t5_2qpnm_4.png?v=36w15qf354cxpaj6vcwx9k91b6ltlqixkjq2) top left no-repeat
+    }
+/* Fleur-de-lis Arrows */
+.arrow {
+    height: 16px;
+    width: 15px
+    }
+.arrow.upmod {
+    background-image: url(http://thumbs.reddit.com/t5_2qpnm_0.png?v=fu4zf95qy6j1n6bl619elhkezk4agh2hj7ru);
+    background-position: 0px 0px
+    }
+.arrow.downmod {
+    background-image: url(http://thumbs.reddit.com/t5_2qpnm_1.png?v=8fcuqlbf2ffbszyl4rt25kckr6r1ypvs7vgu);
+    background-position: 0px 0px
+    }
+.arrow.up {
+    background-image: url(http://thumbs.reddit.com/t5_2qpnm_2.png?v=8pz77pw588kp0kp672l6bdgw7rnd3jmmm993);
+    background-position: 0px 0px
+    }
+.arrow.down {
+    background-image: url(http://thumbs.reddit.com/t5_2qpnm_3.png?v=4ld2bo32sexextuwmz8xeaxfgqk36zvrgcte);
+    background-position: 0px 0px
+    }
+.midcol[style] {
+    width: 4ex !important
+    }
+.comment .midcol {
+    width: 25px
+    }
+.gadget .midcol {
+    width: 25px;
+    margin: 0
+    }
+    
