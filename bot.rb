@@ -122,10 +122,10 @@ class Bot
         json = request("curl --silent -b cookies.txt http://www.reddit.com/user/#{message[:user]}/about.json")
         id = JSON.parse(json)['data']['id']
         @logger.info "Adding new record for #{message.to_s}"
-        @db.execute("insert into user_states (user, subreddit, state, id) values (:user, :subreddit, :change, :id)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id)
+        @db.execute("insert into user_states (user, subreddit, state, id, last_modified) values (:user, :subreddit, :change, :id, :current_timestamp)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id, :current_timestamp => Time.now.to_i)
       else
         @logger.info "Updating record for #{message.to_s}"
-        @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit])
+        @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit and last_modified = :current_timestamp", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit], :current_timestamp => Time.now.to_i)
       end
     end
   end
