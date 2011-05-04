@@ -125,7 +125,7 @@ class Bot
         @db.execute("insert into user_states (user, subreddit, state, id, last_modified) values (:user, :subreddit, :change, :id, :current_timestamp)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id, :current_timestamp => Time.now.to_i)
       else
         @logger.info "Updating record for #{message.to_s}"
-        @db.execute("update user_states set state = :change and last_modified = :current_timestamp where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit], :current_timestamp => Time.now.to_i)
+        @db.execute("update user_states set state = :change, last_modified = :current_timestamp where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit], :current_timestamp => Time.now.to_i)
       end
     end
   end
