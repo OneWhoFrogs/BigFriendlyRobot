@@ -49,7 +49,7 @@ class Bot
     raise "Not logged in!" unless @modhash
     
     @logger.info "Uploading CSS to #{subreddit}"
-    
+
     c = Curl::Easy.new("http://www.reddit.com/api/subreddit_stylesheet")
     c.enable_cookies = true
     c.cookiefile = "#{path}/cookies.txt"
@@ -125,7 +125,7 @@ class Bot
         @db.execute("insert into user_states (user, subreddit, state, id, last_modified) values (:user, :subreddit, :change, :id, :current_timestamp)", :user => message[:user], :subreddit => message[:subreddit], :change => message[:change], :id => id, :current_timestamp => Time.now.to_i)
       else
         @logger.info "Updating record for #{message.to_s}"
-        @db.execute("update user_states set state = :change where user = :user and subreddit = :subreddit and last_modified = :current_timestamp", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit], :current_timestamp => Time.now.to_i)
+        @db.execute("update user_states set state = :change and last_modified = :current_timestamp where user = :user and subreddit = :subreddit", :change => message[:change], :user => message[:user], :subreddit => message[:subreddit], :current_timestamp => Time.now.to_i)
       end
     end
   end
