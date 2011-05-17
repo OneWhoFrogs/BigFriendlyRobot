@@ -1,0 +1,7 @@
+.titlebox .word {
+  display: none;
+}
+
+.titlebox .number:after {
+  content: " gearheads"
+}
