@@ -15,7 +15,8 @@ class Bot
       "bigfriendlyrobot" => BigFriendlyRobot.new,
       "stlouis" => StLouis.new,
       "motorcycles" => Motorcycles.new,
-      "autos" => Autos.new
+      "autos" => Autos.new,
+      "cars" => Cars.new
     }
     
     @db = SQLite3::Database.new("#{path}/user_states.db")
