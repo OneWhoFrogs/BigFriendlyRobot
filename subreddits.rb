@@ -83,7 +83,7 @@ class Autos < Subreddit
   end
 end
 
-class Cars < Subreddits
+class Cars < Subreddit
   def initialize
     @name = "Cars"
     @css = "css/cars.css"
