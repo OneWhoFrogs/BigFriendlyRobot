@@ -77,6 +77,7 @@ class Autos < Subreddit
 
   def build_css(rows)
     css = rows.inject("") do |memo, row|
+      state = row['state']
       memo += ".id-t2_#{row["id"]}:after {color: gray; font-size: 0.75em; content: \" [#{state}]\" !important}\n"
     end
   end
