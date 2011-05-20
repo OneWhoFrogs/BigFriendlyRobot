@@ -1,10 +1,6 @@
-require 'json'
-require 'curb'
-require 'sqlite3'
-require 'nokogiri'
-require 'ap'
-require 'logger'
-require_relative 'subreddits.rb'
+require "bundler/setup"
+Bundler.require(:default)
+require_relative "subreddits.rb"
 
 class Bot
   def initialize(user, passwd)

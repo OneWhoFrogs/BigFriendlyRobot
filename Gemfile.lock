@@ -1,0 +1,24 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    ap (0.1.1)
+      httparty (>= 0.7.7)
+    crack (0.1.8)
+    curb (0.7.15)
+    httparty (0.7.7)
+      crack (= 0.1.8)
+    json (1.5.1)
+    logger (1.2.8)
+    nokogiri (1.4.4)
+    sqlite3 (1.3.3)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  ap
+  curb
+  json
+  logger
+  nokogiri
+  sqlite3
