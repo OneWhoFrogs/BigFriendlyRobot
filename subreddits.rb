@@ -14,7 +14,7 @@ class Subreddit
       end
       true
     end
-    str == str.match(/^[a-zA-Z0-9\-\/' ]{0,40}$/).to_s and clean?(input)
+    input == input.match(/^[a-zA-Z0-9\-\/' ]{0,40}$/).to_s and clean?(input)
   end
   
   def build_css
