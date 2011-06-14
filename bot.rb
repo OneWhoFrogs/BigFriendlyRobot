@@ -12,7 +12,8 @@ class Bot
       "stlouis" => StLouis.new,
       "motorcycles" => Motorcycles.new,
       "autos" => Autos.new,
-      "cars" => Cars.new
+      "cars" => Cars.new,
+      "sailing" => Sailing.new
     }
     
     @db = SQLite3::Database.new("#{path}/user_states.db")
