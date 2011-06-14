@@ -99,3 +99,19 @@ class Cars < Subreddit
     end
   end
 end
+
+class Sailing < Subreddit
+  def initialize
+    @name = "Sailing"
+    @css = "css/sailing.css"
+    @regex = /^[a-zA-Z0-9\-\/' ]{0,40}$/
+    @format = "Letters, numbers, spaces, dashes, and apostrophes only. Text must be shorter than or equal to 40 characters in length."
+  end
+
+  def build_css(rows)
+    css = rows.inject("") do |memo, row|
+      state = row['state']
+      memo += ".id-t2_#{row["id"]}:after {color: gray; font-size: 0.8em; content: \" [#{state}]\" !important}\n"
+    end
+  end
+end
