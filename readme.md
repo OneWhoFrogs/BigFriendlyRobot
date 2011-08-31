@@ -1,3 +1,9 @@
+# When flair came out, I completely redesigned the bot. The source code here isn't currently running on BFR.
+
+You can find a reasonably current archive here: http://dl.dropbox.com/u/4907943/BigFriendlyRobot-8-22.zip
+
+Let me know if you'd like a more up to date version.
+
 # BigFriendlyRobot #
 
 BigFriendlyRobot is a reddit bot that manages user tags within subreddits.  Check out [/r/bigfriendlyrobot](http://reddit.com/r/bigfriendlyrobot).  To create a tag there, message [BigFriendlyRobot](http://www.reddit.com/message/compose/?to=BigFriendlyRobot) with the following fields:
